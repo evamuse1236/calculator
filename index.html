@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎉 Fun Event Cost Calculator 🎉</title>
+    <style>
+        /* Google Font */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .calculator {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .calculator h1 {
+            margin-bottom: 25px;
+            color: #333333;
+            font-size: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555555;
+            font-size: 16px;
+        }
+
+        .input-group label .icon {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .input-group input[type="number"] {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            margin-left: 30px;
+        }
+
+        .input-group input[type="number"]:focus {
+            border-color: #6c63ff;
+            outline: none;
+        }
+
+        .checkbox-group {
+            margin-bottom: 25px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            font-weight: 500;
+            color: #555555;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-group label .icon {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+
+        .calculate-btn {
+            background-color: #6c63ff;
+            color: #ffffff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .calculate-btn:hover {
+            background-color: #5750d3;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f0f4ff;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #333333;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .result .message {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #555555;
+        }
+
+        /* Fun Icons Styling */
+        .input-group .icon, .checkbox-group .icon {
+            margin-right: 8px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 500px) {
+            .calculator {
+                padding: 20px 25px;
+            }
+
+            .calculator h1 {
+                font-size: 24px;
+            }
+
+            .input-group input[type="number"] {
+                margin-left: 20px;
+            }
+
+            .calculate-btn {
+                font-size: 16px;
+                padding: 10px 15px;
+            }
+
+            .result {
+                font-size: 18px;
+                min-height: 70px;
+            }
+
+            .result .message {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <h1>🎉 Event Cost Calculator 🎉</h1>
+
+        <div class="input-group">
+            <label for="adults">
+                <span class="icon">🧑‍🤝‍🧑</span>
+                Adults:
+            </label>
+            <input type="number" id="adults" name="adults" min="0" value="0" placeholder="Enter number of adults">
+        </div>
+
+        <div class="input-group">
+            <label for="children6">
+                <span class="icon">🧒</span>
+                Children (6–12 years):
+            </label>
+            <input type="number" id="children6" name="children6" min="0" value="0" placeholder="Enter number of children (6-12)">
+        </div>
+
+        <div class="input-group">
+            <label for="children5">
+                <span class="icon">👶</span>
+                Children (5 years and below):
+            </label>
+            <input type="number" id="children5" name="children5" min="0" value="0" placeholder="Enter number of children (≤5)">
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="stall" name="stall">
+            <label for="stall">
+                <span class="icon">🛍️</span>
+                Add Stall Booking (+₹600)
+            </label>
+        </div>
+
+        <button class="calculate-btn" onclick="calculateTotal()">Calculate Total</button>
+
+        <div class="result" id="result">
+            💰 Total Cost: ₹0
+            <div class="message" id="message"></div>
+        </div>
+    </div>
+
+    <script>
+        function formatRupees(amount) {
+            return '₹' + amount.toLocaleString('en-IN');
+        }
+
+        function getRandomMessage() {
+            const messages = [
+                "🎈 Let's make your event unforgettable!",
+                "🥳 Party time! Everything is set.",
+                "🎉 You're all set for a fantastic time!",
+                "🍀 Wishing you a joyous and successful event!",
+                "✨ May your event be filled with happiness!",
+                "🎊 Cheers to a wonderful gathering!",
+                "🌟 Here's to a memorable celebration!",
+                "🎁 Your event planning just got easier!",
+                "💖 Best wishes for your upcoming event!",
+                "🌈 Let the festivities begin!"
+            ];
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+
+        function calculateTotal() {
+            const adults = parseInt(document.getElementById('adults').value) || 0;
+            const children6 = parseInt(document.getElementById('children6').value) || 0;
+            const children5 = parseInt(document.getElementById('children5').value) || 0;
+            const stall = document.getElementById('stall').checked;
+
+            // Input Validation
+            if (adults < 0 || children6 < 0 || children5 < 0) {
+                alert("Please enter valid numbers (0 or more) for all fields.");
+                return;
+            }
+
+            // Calculate initial cost
+            const costAdults = 850 * adults;
+            const costChildren6 = 600 * children6;
+            const costChildren5 = 0; // Free
+
+            let total = costAdults + costChildren6 + costChildren5;
+
+            // Calculate total people above age 5
+            const totalPeopleAbove5 = adults + children6;
+
+            // Apply discount if applicable
+            if (totalPeopleAbove5 >= 3) {
+                const discount = 100 * totalPeopleAbove5;
+                total -= discount;
+            }
+
+            // Add stall booking cost if checked
+            if (stall) {
+                total += 600;
+            }
+
+            // Ensure total is not negative
+            if (total < 0) total = 0;
+
+            // Format total in Rupees
+            const formattedTotal = formatRupees(total);
+
+            // Get a random message
+            const message = getRandomMessage();
+
+            // Display the result and message
+            document.getElementById('result').innerHTML = `💰 Total Cost: ${formattedTotal} <div class="message">${message}</div>`;
+        }
+
+        function resetFields() {
+            document.getElementById('adults').value = 0;
+            document.getElementById('children6').value = 0;
+            document.getElementById('children5').value = 0;
+            document.getElementById('stall').checked = false;
+            document.getElementById('result').innerHTML = `💰 Total Cost: ₹0 <div class="message" id="message"></div>`;
+        }
+    </script>
+
+</body>
+</html>
